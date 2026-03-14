@@ -1,15 +1,14 @@
-# Use official Apache Tomcat base image with JDK 17
-FROM tomcat:9.0-jdk17
+# Stage 1: Build the application
+FROM maven:3.8.4-openjdk-11-slim AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn package -DskipTests
 
-# Remove default Tomcat apps (optional, for a clean slate)
-RUN rm -rf /usr/local/tomcat/webapps/*
-
-# Copy your WAR file into the Tomcat webapps directory
-# Rename it to ROOT.war for root path deployment
-COPY target/TrainBook-1.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
-
-# Expose default Tomcat port
+# Stage 2: Run the application
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Start Tomcat (default CMD in base image)
-CMD ["catalina.sh", "run"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
