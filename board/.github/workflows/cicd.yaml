@@ -1,4 +1,4 @@
-name: Build and Deploy Board
+name: Build and Deploy Board Game App
 
 on:
   push:
@@ -101,11 +101,11 @@ jobs:
       - name: Deploy to EKS
         run: |
          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          kubectl set image deployment/train-ticket-deployment \
+          kubectl set image deployment/Board \
             train-ticket-container=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
             -n ${{ secrets.K8S_NAMESPACE }}
 
-          kubectl rollout status deployment/train-ticket-deployment \
+          kubectl rollout status deployment/Board \
             -n ${{ secrets.K8S_NAMESPACE }} --timeout=200s
 
 
