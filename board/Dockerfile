@@ -3,25 +3,23 @@ FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copy project files
-COPY pom.xml .
-COPY src ./src
+# Copy entire project
+COPY . .
 
-# Build the WAR file
+# Build the Spring Boot JAR
 RUN mvn clean package -DskipTests
 
 
-# ---------- Stage 2: Run with Tomcat ----------
-FROM tomcat:9.0-jdk17
+# ---------- Stage 2: Run the application ----------
+FROM eclipse-temurin:17-jdk-jammy
 
-# Remove default Tomcat apps
-RUN rm -rf /usr/local/tomcat/webapps/*
+WORKDIR /app
 
-# Copy WAR from build stage
-COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
+# Copy built JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose Tomcat port
+# Expose Spring Boot port
 EXPOSE 8080
 
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# Run Spring Boot
+ENTRYPOINT ["java","-jar","app.jar"]
