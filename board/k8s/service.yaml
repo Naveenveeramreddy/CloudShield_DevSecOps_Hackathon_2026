@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Board
+  namespace: Board
+spec:
+  type: LoadBalancer
+  selector:
+    app: Board
+  ports:
+    - port: 80
+      targetPort: 8080
