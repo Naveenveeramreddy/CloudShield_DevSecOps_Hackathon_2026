@@ -112,8 +112,4 @@ jobs:
             -n ${{ secrets.K8S_NAMESPACE }}
 
           kubectl rollout status deployment/Board \
-            -n ${{ secrets.K8S_NAMESPACE }} --timeout=200s
-
-
-
-            
+            -n ${{ secrets.K8S_NAMESPACE }} --timeout=200s     
