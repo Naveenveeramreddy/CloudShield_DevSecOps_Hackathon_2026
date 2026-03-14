@@ -102,8 +102,8 @@ jobs:
     #  CREATE NAMESPACE IF NOT PRESENT
       - name: Apply namespace manifest
         run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/deployment.yaml -n board
+    
+          kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
       - name: Deploy to EKS
