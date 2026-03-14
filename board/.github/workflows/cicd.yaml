@@ -107,3 +107,6 @@ jobs:
 
           kubectl rollout status deployment/train-ticket-deployment \
             -n ${{ secrets.K8S_NAMESPACE }} --timeout=200s
+
+
+            
